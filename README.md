@@ -300,7 +300,7 @@ get_antitheft_rules |  heart_beat |
 add_antitheft_rule |  set_inherit_info |
 edit_antitheft_rule |  get_inherit_info|
 set_auto_off_config | get_auto_off_config|
-get_auto_off_status | ancel_auto_
+get_auto_off_status | cancel_auto_off
 exec_atcmd |  I think the function exec_atcmd is one of the most interesting because the function name mean it is possible to send AT commands directly to the device, in theory. I've tried everything but nothing worked... In any case all the compatible AT commands are also listed in the firmware, if someone can find how to use it... PLEASE ping me!|
 
 ### Tapo firmware:
