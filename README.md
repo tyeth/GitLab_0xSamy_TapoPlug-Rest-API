@@ -328,6 +328,28 @@ http://download.tplinkcloud.com/firmware/P105_1-3-320220311-rel61171_2022-04-12_
 }
 ```
 
+[2022-11-15] Update - Tapo P105 1.3.8 firmware has been released:<br>
+http://download.tplinkcloud.com/firmware/P105_1.0_1.3.8_20230720_r59046_signed_1690537026862.bin
+```json
+{
+  "error_code": 0,
+  "result": {
+    "fwList": [
+      {
+        "fwReleaseLog": "リリースノート：\n1. Google Homeでプラグをオンにできない問題を修正しました。\n2. デバイスのセキュリティが向上しました。",
+        "fwVer": "1.3.8 Build 20230720 Rel.59046",
+        "fwReleaseDate": "2023-07-28",
+        "fwType": 2,
+        "fwUrl": "http://download.tplinkcloud.com/firmware/P105_1.0_1.3.8_20230720_r59046_signed_1690537026862.bin",
+        "fwTitle": "Hi, a new firmware with bug fixes and performance improvement is available for your Tapo P105.",
+        "fwLocation": 0,
+        "fwReleaseLogUrl": "undefined yet"
+      }
+    ]
+  }
+}
+```
+
 ### Building modules:
 
 * To build a package to install via `pip` or `easy_install`, execute:
