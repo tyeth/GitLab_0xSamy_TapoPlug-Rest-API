@@ -330,7 +330,7 @@ http://download.tplinkcloud.com/firmware/P105_1-3-320220311-rel61171_2022-04-12_
 }
 ```
 
-[2022-11-15] Update - Tapo P105 1.3.8 firmware has been released:<br>
+[2023-11-15] Update - Tapo P105 1.3.8 firmware has been released:<br>
 http://download.tplinkcloud.com/firmware/P105_1.0_1.3.8_20230720_r59046_signed_1690537026862.bin
 ```json
 {
