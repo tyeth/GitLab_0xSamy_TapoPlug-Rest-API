@@ -1,3 +1,4 @@
 requests
 Crypto
+# pycryptodome instead of Crypto on windows: pip uninstall crypto ; pip uninstall pycryptodome ; pip install pycryptodome
 pkcs7
