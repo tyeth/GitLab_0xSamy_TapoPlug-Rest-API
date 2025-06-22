@@ -1,0 +1,128 @@
+log
+
+C:\dev\python\circuitpython-PROJECTS\GitLab_0xSamy_TapoPlug-Rest-API\TapoPlug-Rest-API [circuitpython +4 ~2 -0 !]> python .\test.py
+{"result":{"device_id":"802277C30623E30E220C47380C84BD8320847116","fw_ver":"1.1.6 Build 221114 Rel.203339","hw_ver":"1.0","type":"SMART.TAPOPLUG","model":"P110","mac":"AC-15-A2-46-64-07","hw_id":"56DD079101D61D400A11C4A3D41C51DA","fw_id":"00000000000000000000000000000000","oem_id":"AE7B616A7168B34151ABBCF86C88DF34","ip":"192.168.1.161","time_diff":0,"ssid":"ZnJlZTRhbGw=","rssi":-68,"signal_level":2,"latitude":514788,"longitude":-25326,"lang":"en_US","avatar":"radio","region":"Europe/London","specs":"","nickname":"a2l0Y2hlblN0ZXJlbw==","has_set_location_info":true,"device_on":true,"on_time":3732717,"default_states":{"type":"last_states","state":{}},"overheated":false,"power_protection_status":"normal"},"error_code":0}
+
+verbose logging
+
+C:\dev\pythpython .\test.py-PROJECTS\GitLab_0xSamy_TapoPlug-Rest-API\TapoPlug-Rest-API [circuitpython +4 ~2 -0 !]>
+2025-06-22 19:41:26,646 - tapo_plug.tapoPlugApi - INFO - CALLED: getDeviceInfo | Device Info: {'tapoIp': '192.168.1.161'}
+2025-06-22 19:41:26,646 - tapo_plug.tapoPlugApi - DEBUG - Loading keys for device info request
+2025-06-22 19:41:26,646 - tapo_plug.tapoPlugApi - INFO - CALLED: loadKeys | Device Info: {'tapoIp': '192.168.1.161'}
+2025-06-22 19:41:26,647 - tapo_plug.tapoPlugApi - DEBUG - Generating key pair
+2025-06-22 19:41:26,647 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: generateKeyPair
+2025-06-22 19:41:26,647 - tapo_plug.tapoEncryption - DEBUG - Starting RSA key generation (1024 bits)
+2025-06-22 19:41:26,666 - tapo_plug.tapoEncryption - DEBUG - RSA key pair generated successfully
+2025-06-22 19:41:26,667 - tapo_plug.tapoEncryption - DEBUG - Exporting private key with PKCS#8 format
+2025-06-22 19:41:26,681 - tapo_plug.tapoEncryption - DEBUG - Private key exported - length: 915 bytes
+2025-06-22 19:41:26,681 - tapo_plug.tapoEncryption - DEBUG - Exporting public key with PKCS#8 format
+2025-06-22 19:41:26,682 - tapo_plug.tapoEncryption - DEBUG - Public key exported - length: 271 bytes
+2025-06-22 19:41:26,682 - tapo_plug.tapoEncryption - INFO - generateKeyPair completed - Public key length: 271, Private key length: 915      
+2025-06-22 19:41:26,682 - tapo_plug.tapoPlugApi - DEBUG - Generating handshake
+2025-06-22 19:41:26,682 - tapo_plug.tapoPlugApi - INFO - CALLED: generateHandshake | Additional Params: {'tapoIp': '192.168.1.161', 'publicKey_length': 271}
+2025-06-22 19:41:26,682 - tapo_plug.tapoPlugApi - DEBUG - Generating handshake for IP: 192.168.1.161
+2025-06-22 19:41:26,682 - tapo_plug.tapoPlugApi - DEBUG - Sending handshake request to http://192.168.1.161/app
+2025-06-22 19:41:26,684 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 192.168.1.161:80
+2025-06-22 19:41:26,829 - urllib3.connectionpool - DEBUG - http://192.168.1.161:80 "POST /app HTTP/1.1" 200 208
+2025-06-22 19:41:26,830 - tapo_plug.tapoPlugApi - DEBUG - Handshake response status: 200
+2025-06-22 19:41:26,831 - tapo_plug.tapoPlugApi - INFO - generateHandshake completed - Status: 200
+2025-06-22 19:41:26,831 - tapo_plug.tapoPlugApi - DEBUG - Extracting Tapo key from handshake response
+2025-06-22 19:41:26,831 - tapo_plug.tapoPlugApi - DEBUG - Extracting cookie from handshake response
+2025-06-22 19:41:26,832 - tapo_plug.tapoPlugApi - DEBUG - Decoding Tapo key
+2025-06-22 19:41:26,832 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: decodeTapoKey | Params: {'tapoKey_length': 172, 'has_keypair': True}
+2025-06-22 19:41:26,833 - tapo_plug.tapoEncryption - DEBUG - Starting Tapo key decoding - input key length: 172
+2025-06-22 19:41:26,833 - tapo_plug.tapoEncryption - DEBUG - Base64 decoding the Tapo key
+2025-06-22 19:41:26,833 - tapo_plug.tapoEncryption - DEBUG - Base64 decoded data length: 128 bytes
+2025-06-22 19:41:26,834 - tapo_plug.tapoEncryption - DEBUG - Importing RSA private key
+2025-06-22 19:41:26,844 - tapo_plug.tapoEncryption - DEBUG - RSA key imported - key size: 1024 bits
+2025-06-22 19:41:26,845 - tapo_plug.tapoEncryption - DEBUG - Creating PKCS1_v1_5 cipher for decryption
+2025-06-22 19:41:26,845 - tapo_plug.tapoEncryption - DEBUG - Decrypting the encrypted data
+2025-06-22 19:41:26,846 - tapo_plug.tapoEncryption - DEBUG - Decrypted bytes length: 32
+2025-06-22 19:41:26,846 - tapo_plug.tapoEncryption - DEBUG - Extracting secretKeySpec (first 16 bytes)
+2025-06-22 19:41:26,847 - tapo_plug.tapoEncryption - DEBUG - SecretKeySpec extracted - length: 16
+2025-06-22 19:41:26,847 - tapo_plug.tapoEncryption - DEBUG - Extracting ivParameterSpec (bytes 16-32)
+2025-06-22 19:41:26,847 - tapo_plug.tapoEncryption - DEBUG - IvParameterSpec extracted - length: 16
+2025-06-22 19:41:26,847 - tapo_plug.tapoEncryption - INFO - decodeTapoKey completed - SecretKey: 16 bytes, IV: 16 bytes
+2025-06-22 19:41:26,847 - tapo_plug.tapoPlugApi - DEBUG - Getting auth token
+2025-06-22 19:41:26,848 - tapo_plug.tapoPlugApi - INFO - CALLED: loginRequest | Device Info: {'tapoIp': '192.168.1.161'} | Additional Params: {'cookie_name': 'TP_SESSIONID'}
+2025-06-22 19:41:26,848 - tapo_plug.tapoPlugApi - DEBUG - Generating email hash for login
+2025-06-22 19:41:26,848 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: shaDigestEmail | Params: {'email': '<str:length=26>'}
+2025-06-22 19:41:26,848 - tapo_plug.tapoEncryption - DEBUG - Starting SHA1 hash of email - input length: 26 characters
+2025-06-22 19:41:26,849 - tapo_plug.tapoEncryption - DEBUG - Encoding email to bytes (UTF-8)
+2025-06-22 19:41:26,849 - tapo_plug.tapoEncryption - DEBUG - Email encoded to 26 bytes
+2025-06-22 19:41:26,849 - tapo_plug.tapoEncryption - DEBUG - Computing SHA1 hash
+2025-06-22 19:41:26,849 - tapo_plug.tapoEncryption - DEBUG - SHA1 hash computed - length: 40 characters
+2025-06-22 19:41:26,849 - tapo_plug.tapoEncryption - INFO - shaDigestEmail completed - Hash length: 40
+2025-06-22 19:41:26,849 - tapo_plug.tapoPlugApi - DEBUG - Encrypting login data
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: encryptJsonData | Params: {'has_decoded_key': True, 'jsonData_length': 168}
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - DEBUG - Starting JSON data encryption - input length: 168 characters
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - DEBUG - Initializing PKCS7 encoder
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - DEBUG - Creating AES cipher (CBC mode)
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - DEBUG - Using secretKeySpec length: 16 bytes
+2025-06-22 19:41:26,850 - tapo_plug.tapoEncryption - DEBUG - Using ivParameterSpec length: 16 bytes
+2025-06-22 19:41:26,852 - tapo_plug.tapoEncryption - DEBUG - Applying PKCS7 padding to JSON data
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Padded data length: 176 characters
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Encoding padded data to bytes
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Encoded padded data length: 176 bytes
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Encrypting the padded JSON data
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Encrypted data length: 176 bytes
+2025-06-22 19:41:26,853 - tapo_plug.tapoEncryption - DEBUG - Base64 encoding the encrypted data
+2025-06-22 19:41:26,854 - tapo_plug.tapoEncryption - DEBUG - Base64 encoded result length: 236 characters
+2025-06-22 19:41:26,854 - tapo_plug.tapoEncryption - INFO - encryptJsonData completed - Output length: 236
+2025-06-22 19:41:26,854 - tapo_plug.tapoPlugApi - DEBUG - Sending login request to http://192.168.1.161/app
+2025-06-22 19:41:26,855 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 192.168.1.161:80
+2025-06-22 19:41:26,882 - urllib3.connectionpool - DEBUG - http://192.168.1.161:80 "POST /app HTTP/1.1" 200 149
+2025-06-22 19:41:26,882 - tapo_plug.tapoPlugApi - DEBUG - Login response status: 200
+2025-06-22 19:41:26,883 - tapo_plug.tapoPlugApi - DEBUG - Decrypting login response
+2025-06-22 19:41:26,883 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: decryptJsonData | Params: {'has_decoded_key': True, 'encryptedData_length': 108}
+2025-06-22 19:41:26,883 - tapo_plug.tapoEncryption - DEBUG - Starting JSON data decryption - input length: 108 characters
+2025-06-22 19:41:26,884 - tapo_plug.tapoEncryption - DEBUG - Base64 decoding the encrypted JSON data
+2025-06-22 19:41:26,884 - tapo_plug.tapoEncryption - DEBUG - Base64 decoded data length: 80 bytes
+2025-06-22 19:41:26,884 - tapo_plug.tapoEncryption - DEBUG - Creating AES cipher for decryption (CBC mode)
+2025-06-22 19:41:26,884 - tapo_plug.tapoEncryption - DEBUG - Using secretKeySpec length: 16 bytes
+2025-06-22 19:41:26,884 - tapo_plug.tapoEncryption - DEBUG - Using ivParameterSpec length: 16 bytes
+2025-06-22 19:41:26,885 - tapo_plug.tapoEncryption - DEBUG - Decrypting the data
+2025-06-22 19:41:26,885 - tapo_plug.tapoEncryption - DEBUG - Decrypted data length: 80 bytes
+2025-06-22 19:41:26,885 - tapo_plug.tapoEncryption - DEBUG - Decoding bytes to string and stripping whitespace
+2025-06-22 19:41:26,885 - tapo_plug.tapoEncryption - DEBUG - Final result length: 70 characters
+2025-06-22 19:41:26,886 - tapo_plug.tapoEncryption - INFO - decryptJsonData completed - Output length: 70
+2025-06-22 19:41:26,886 - tapo_plug.tapoPlugApi - INFO - loginRequest completed - Token length: 32
+2025-06-22 19:41:26,886 - tapo_plug.tapoPlugApi - INFO - loadKeys completed - Auth token length: 32
+2025-06-22 19:41:26,887 - tapo_plug.tapoPlugApi - DEBUG - Executing request with data: {'method': 'get_device_info', 'requestTimeMils': 0, 'terminalUUID': 'AA3512F85D2C603C3434C5BD9EA95B43'}
+2025-06-22 19:41:26,887 - tapo_plug.tapoPlugApi - INFO - CALLED: execRequest | Device Info: {'tapoIp': '192.168.1.161'} | Additional Params: {'method': 'get_device_info'}
+2025-06-22 19:41:26,887 - tapo_plug.tapoPlugApi - DEBUG - Encrypting request data for method: get_device_info
+2025-06-22 19:41:26,887 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: encryptJsonData | Params: {'has_decoded_key': True, 'jsonData_length': 103}
+2025-06-22 19:41:26,887 - tapo_plug.tapoEncryption - DEBUG - Starting JSON data encryption - input length: 103 characters
+2025-06-22 19:41:26,887 - tapo_plug.tapoEncryption - DEBUG - Initializing PKCS7 encoder
+2025-06-22 19:41:26,888 - tapo_plug.tapoEncryption - DEBUG - Creating AES cipher (CBC mode)
+2025-06-22 19:41:26,888 - tapo_plug.tapoEncryption - DEBUG - Using secretKeySpec length: 16 bytes
+2025-06-22 19:41:26,888 - tapo_plug.tapoEncryption - DEBUG - Using ivParameterSpec length: 16 bytes
+2025-06-22 19:41:26,888 - tapo_plug.tapoEncryption - DEBUG - Applying PKCS7 padding to JSON data
+2025-06-22 19:41:26,888 - tapo_plug.tapoEncryption - DEBUG - Padded data length: 112 characters
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Encoding padded data to bytes
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Encoded padded data length: 112 bytes
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Encrypting the padded JSON data
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Encrypted data length: 112 bytes
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Base64 encoding the encrypted data
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - DEBUG - Base64 encoded result length: 152 characters
+2025-06-22 19:41:26,889 - tapo_plug.tapoEncryption - INFO - encryptJsonData completed - Output length: 152
+2025-06-22 19:41:26,890 - tapo_plug.tapoPlugApi - DEBUG - Sending request to http://192.168.1.161/app?token=...
+2025-06-22 19:41:26,891 - urllib3.connectionpool - DEBUG - Starting new HTTP connection (1): 192.168.1.161:80
+2025-06-22 19:41:26,923 - urllib3.connectionpool - DEBUG - http://192.168.1.161:80 "POST /app?token=9C2842297A6AC2353899CE35CBB8CE33 HTTP/1.1" 200 1025
+2025-06-22 19:41:26,923 - tapo_plug.tapoPlugApi - DEBUG - Request response status: 200
+2025-06-22 19:41:26,923 - tapo_plug.tapoPlugApi - DEBUG - Decrypting response data
+2025-06-22 19:41:26,924 - tapo_plug.tapoEncryption - INFO - CRYPTO_CALLED: decryptJsonData | Params: {'has_decoded_key': True, 'encryptedData_length': 984}
+2025-06-22 19:41:26,924 - tapo_plug.tapoEncryption - DEBUG - Starting JSON data decryption - input length: 984 characters
+2025-06-22 19:41:26,924 - tapo_plug.tapoEncryption - DEBUG - Base64 decoding the encrypted JSON data
+2025-06-22 19:41:26,924 - tapo_plug.tapoEncryption - DEBUG - Base64 decoded data length: 736 bytes
+2025-06-22 19:41:26,925 - tapo_plug.tapoEncryption - DEBUG - Creating AES cipher for decryption (CBC mode)
+2025-06-22 19:41:26,925 - tapo_plug.tapoEncryption - DEBUG - Using secretKeySpec length: 16 bytes
+2025-06-22 19:41:26,925 - tapo_plug.tapoEncryption - DEBUG - Using ivParameterSpec length: 16 bytes
+2025-06-22 19:41:26,925 - tapo_plug.tapoEncryption - DEBUG - Decrypting the data
+2025-06-22 19:41:26,926 - tapo_plug.tapoEncryption - DEBUG - Decrypted data length: 736 bytes
+2025-06-22 19:41:26,926 - tapo_plug.tapoEncryption - DEBUG - Decoding bytes to string and stripping whitespace
+2025-06-22 19:41:26,926 - tapo_plug.tapoEncryption - DEBUG - Final result length: 726 characters
+2025-06-22 19:41:26,926 - tapo_plug.tapoEncryption - INFO - decryptJsonData completed - Output length: 726
+2025-06-22 19:41:26,926 - tapo_plug.tapoPlugApi - INFO - execRequest completed - Result length: 726
+2025-06-22 19:41:26,927 - tapo_plug.tapoPlugApi - INFO - getDeviceInfo completed - Response length: 726
+{"result":{"device_id":"802277C30623E30E220C47380C84BD8320847116","fw_ver":"1.1.6 Build 221114 Rel.203339","hw_ver":"1.0","type":"SMART.TAPOPLUG","model":"P110","mac":"AC-15-A2-46-64-07","hw_id":"56DD079101D61D400A11C4A3D41C51DA","fw_id":"00000000000000000000000000000000","oem_id":"AE7B616A7168B34151ABBCF86C88DF34","ip":"192.168.1.161","time_diff":0,"ssid":"ZnJlZTRhbGw=","rssi":-80,"signal_level":1,"latitude":514788,"longitude":-25326,"lang":"en_US","avatar":"radio","region":"Europe/London","specs":"","nickname":"a2l0Y2hlblN0ZXJlbw==","has_set_location_info":true,"device_on":true,"on_time":3733497,"default_states":{"type":"last_states","state":{}},"overheated":false,"power_protection_status":"normal"},"error_code":0}
