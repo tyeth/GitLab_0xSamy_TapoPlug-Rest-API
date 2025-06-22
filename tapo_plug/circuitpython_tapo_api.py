@@ -196,10 +196,7 @@ def generateHandshake(tapoIP, publicKey):
     }
 
     request_headers = {
-        "User-Agent": "TapoPlug/1.0",
-        "Content-Type": "application/json",
-        "Accept": "application/json, text/plain, */*",
-        "Origin": f"http://{tapoIP}"
+        "Accept": "application/json; charset=UTF-8",
     }
 
     session = get_session()
@@ -208,13 +205,17 @@ def generateHandshake(tapoIP, publicKey):
     cp_log("DEBUG", f"Sending handshake request to {url} with data: {data}")
     
     try:
-        response = session.post(url, json=data)
+        response = session.post(url, headers=request_headers, json=data)
         status_code = response.status_code
         
         # Extract all data from response immediately
         response_headers = dict(response.headers)
-        response_json = response.json()
         cp_log("DEBUG", f"Handshake response headers: {response_headers}")
+        try:
+            response_json = response.json()
+        except Exception as e:
+            cp_log("ERROR", f"Failed to parse JSON response: {str(e)}")
+            response_json = response.content.decode('utf-8')
         cp_log("DEBUG", f"Handshake response JSON: {response_json}")
         # Close response to free memory
         response.close()
@@ -273,7 +274,7 @@ def loginRequest(deviceInfo, decodedTapoKey, tapoCookie):
         session = get_session()
         url = f"http://{deviceInfo['tapoIp']}/app"
         
-        cp_log("DEBUG", f"Sending login request to {url}")
+        cp_log("DEBUG", f"Sending LOGIN request to {url}")
         response = session.post(url, json=secureData, cookies=cookies)
         
         # Extract data immediately

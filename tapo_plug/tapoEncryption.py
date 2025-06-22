@@ -11,6 +11,7 @@ from pkcs7 import PKCS7Encoder
 import hashlib
 import base64
 import logging
+import os
 
 # Configure logging for verbose encryption function tracking
 logging.basicConfig(
@@ -43,8 +44,27 @@ def log_crypto_operation(func_name, **kwargs):
 
 def generateKeyPair():
   log_crypto_operation("generateKeyPair")
-  logger.debug("Starting RSA key generation (1024 bits)")
+  logger.debug("Starting RSA key generation (1024 bits) - attempting to load existing keys if available")
   
+  # attempt to load from folder if available
+  # if not available, generate a new key pair
+
+  if os.path.exists("tapo_public_key.pem") and os.path.exists("tapo_private_key.pem"):
+    logger.debug("Loading existing RSA key pair from files")
+    try:
+      with open("tapo_private_key.pem", "rb") as private_file:
+        privateKey = private_file.read()
+      with open("tapo_public_key.pem", "rb") as public_file:
+        publicKey = public_file.read()
+      logger.info("Existing RSA key pair loaded successfully")
+      return {
+        "publicKey": publicKey.decode('utf-8'),
+        "privateKey": privateKey.decode('utf-8'),
+      }
+    except Exception as e:
+      logger.error(f"Failed to load existing keys: {str(e)}")
+  logger.debug("Generating new RSA key pair instead")
+
   try:
     key = RSA.generate(1024)
     logger.debug("RSA key pair generated successfully")
@@ -61,6 +81,16 @@ def generateKeyPair():
       "publicKey": publicKey.decode('utf-8'),
       "privateKey": privateKey.decode('utf-8'),
     }
+
+    logger.debug("Saving RSA key pair to files")
+    try:
+      with open("tapo_private_key.pem", "wb") as private_file:
+        private_file.write(privateKey)
+      with open("tapo_public_key.pem", "wb") as public_file:
+        public_file.write(publicKey)
+      logger.info("RSA key pair saved to files successfully")
+    except Exception as e:
+      logger.error(f"Failed to save RSA key pair to files: {str(e)}")
 
     logger.info(f"generateKeyPair completed - Public key length: {len(tapoKeyPair['publicKey'])}, Private key length: {len(tapoKeyPair['privateKey'])}")
     return tapoKeyPair

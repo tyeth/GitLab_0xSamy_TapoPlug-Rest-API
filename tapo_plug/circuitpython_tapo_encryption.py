@@ -67,6 +67,35 @@ def generateKeyPair():
     cp_log_crypto("generateKeyPair")
     cp_log("DEBUG", "Starting RSA key generation (1024 bits)")
     
+    # attempt to load keys from file system first
+    try:
+        cp_log("DEBUG", "Checking for existing keys in file system")
+        with open("/tapo_public_key.pem", "r") as f:
+            public_key_pem = f.read()
+        with open("/tapo_private_key.pem", "r") as f:
+            private_key_pem = f.read()
+        
+        cp_log("DEBUG", "Keys found in file system, loading...")
+        pub_key = adafruit_rsa.pem.load_pem(public_key_pem.encode('utf-8'), "PUBLIC KEY")
+        priv_key = adafruit_rsa.pem.load_pem(private_key_pem.encode('utf-8'), "PRIVATE KEY")
+
+        tapoKeyPair = {
+            "publicKey": public_key_pem,
+            "privateKey": private_key_pem,
+            "public_key_obj": pub_key,
+            "private_key_obj": priv_key
+        }
+        
+        cp_log("INFO", "generateKeyPair completed - Loaded from file system")
+        gc.collect()  # Clean up memory
+        return tapoKeyPair
+        
+    except OSError as e:
+        cp_log("WARNING", f"Failed to load keys from file system: {str(e)}")
+    except Exception as e:
+        cp_log("ERROR", f"Unexpected error loading keys: {str(e)}")
+
+
     try:
         # Generate RSA key pair using adafruit_rsa - correct usage from auth_protocol.py
         cp_log("DEBUG", "Generating RSA key pair...")
@@ -95,6 +124,20 @@ def generateKeyPair():
             "public_key_obj": pub_key,
             "private_key_obj": priv_key
         }
+
+        import storage
+        if storage.getmount('/').readonly:
+            cp_log("WARNING", "Storage is read-only, cannot save keys to file system")
+            cp_log("DEBUG", "Returning generated keys:")
+            cp_log("DEBUG", f"Public Key:\n{public_key_pem}\n")
+            cp_log("DEBUG", f"Private Key:\n{private_key_pem}\n")
+        else:
+            cp_log("DEBUG", "Saving keys to file system")
+            with open("/tapo_public_key.pem", "w") as f:
+                f.write(public_key_pem)
+            with open("/tapo_private_key.pem", "w") as f:
+                f.write(private_key_pem)
+
         
         cp_log("INFO", f"generateKeyPair completed - Public: {len(public_key_pem)}, Private: {len(private_key_pem)}")
         gc.collect()  # Clean up memory

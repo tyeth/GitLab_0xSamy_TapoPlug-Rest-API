@@ -519,6 +519,7 @@ def generateHandshake(tapoIP, publicKey):
   }
 
   logger.debug(f"Sending handshake request to http://{tapoIP}/app")
+  logger.debug(f"ReQuest Handshake data: {data}")
   response = requests.post("http://{}/app".format(tapoIP), data=json.dumps(data), verify=False)
   logger.debug(f"Response headers: {response.headers}")
   logger.debug(f"Response content: {response.content.decode('utf-8') if response.content else 'No content'}")
