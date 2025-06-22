@@ -520,6 +520,9 @@ def generateHandshake(tapoIP, publicKey):
 
   logger.debug(f"Sending handshake request to http://{tapoIP}/app")
   response = requests.post("http://{}/app".format(tapoIP), data=json.dumps(data), verify=False)
+  logger.debug(f"Response headers: {response.headers}")
+  logger.debug(f"Response content: {response.content.decode('utf-8') if response.content else 'No content'}")
+  logger.debug(f"Response cookies: {response.cookies}")
   logger.debug(f"Handshake response status: {response.status_code}")
 
   if response.status_code != 200:
@@ -528,7 +531,6 @@ def generateHandshake(tapoIP, publicKey):
       "error": "Somthing's wrong."
     }
     logger.error(f"Handshake failed: {error}")
-
   logger.info(f"generateHandshake completed - Status: {response.status_code}")
   return response
 
@@ -567,6 +569,9 @@ def loginRequest(deviceInfo, decodedTapoKey, tapoCookie):
 
   logger.debug(f"Sending login request to http://{deviceInfo['tapoIp']}/app")
   response = requests.post("http://{}/app".format(deviceInfo['tapoIp']), cookies=cookies, data=json.dumps(secureData), verify=False)
+  logger.debug(f"Response headers: {response.headers}")
+  logger.debug(f"Response content: {response.content.decode('utf-8') if response.content else 'No content'}")
+  logger.debug(f"Response cookies: {response.cookies}")
   logger.debug(f"Login response status: {response.status_code}")
 
   if response.status_code != 200:
@@ -605,6 +610,9 @@ def execRequest(deviceInfo, keys, data):
   
   logger.debug(f"Sending request to http://{deviceInfo['tapoIp']}/app?token=...")
   response = requests.post("http://{}/app?token={}".format(deviceInfo['tapoIp'],keys['tapoAuthToken']), cookies=cookies, data=json.dumps(secureData), verify=False)
+  logger.debug(f"Response headers: {response.headers}")
+  logger.debug(f"Response content: {response.content.decode('utf-8') if response.content else 'No content'}")
+  logger.debug(f"Response cookies: {response.cookies}")
   logger.debug(f"Request response status: {response.status_code}")
   
   if response.status_code != 200:
