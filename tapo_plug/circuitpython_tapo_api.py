@@ -182,30 +182,58 @@ def generateHandshake(tapoIP, publicKey):
                         publicKey_length=len(publicKey) if publicKey else 0)
     cp_log("DEBUG", f"Generating handshake for IP: {tapoIP}")
 
+    # Format public key like in auth_protocol.py - remove headers and newlines
+    public_key_formatted = publicKey.replace("-----BEGIN PUBLIC KEY-----\n", "")\
+                                   .replace("-----END PUBLIC KEY-----\n", "")\
+                                   .replace("\n", "")
+
     data = {
         "method": "handshake",
         "params": {
-            "key": publicKey,
+            "key": public_key_formatted,
         },
         "requestTimeMils": 0
+    }
+
+    request_headers = {
+        "User-Agent": "TapoPlug/1.0",
+        "Content-Type": "application/json",
+        "Accept": "application/json, text/plain, */*",
+        "Origin": f"http://{tapoIP}"
     }
 
     session = get_session()
     url = f"http://{tapoIP}/app"
     
-    cp_log("DEBUG", f"Sending handshake request to {url}")
+    cp_log("DEBUG", f"Sending handshake request to {url} with data: {data}")
     
     try:
         response = session.post(url, json=data)
-        cp_log("DEBUG", f"Handshake response status: {response.status_code}")
+        status_code = response.status_code
         
-        if response.status_code != 200:
-            error_msg = f"Handshake failed with status: {response.status_code}"
+        # Extract all data from response immediately
+        response_headers = dict(response.headers)
+        response_json = response.json()
+        cp_log("DEBUG", f"Handshake response headers: {response_headers}")
+        cp_log("DEBUG", f"Handshake response JSON: {response_json}")
+        # Close response to free memory
+        response.close()
+        
+        cp_log("DEBUG", f"Handshake response status: {status_code}")
+        
+        if status_code != 200:
+            error_msg = f"Handshake failed with status: {status_code}"
             cp_log("ERROR", error_msg)
             raise Exception(error_msg)
             
-        cp_log("INFO", f"generateHandshake completed - Status: {response.status_code}")
-        return response
+        cp_log("INFO", f"generateHandshake completed - Status: {status_code}")
+        
+        # Return processed data, not the response object
+        return {
+            'status_code': status_code,
+            'headers': response_headers,
+            'json': response_json
+        }
         
     except Exception as e:
         cp_log("ERROR", f"generateHandshake failed: {str(e)}")
@@ -247,19 +275,24 @@ def loginRequest(deviceInfo, decodedTapoKey, tapoCookie):
         
         cp_log("DEBUG", f"Sending login request to {url}")
         response = session.post(url, json=secureData, cookies=cookies)
-        cp_log("DEBUG", f"Login response status: {response.status_code}")
+        
+        # Extract data immediately
+        status_code = response.status_code
+        response_json = response.json()
+        response.close()
+        
+        cp_log("DEBUG", f"Login response status: {status_code}")
 
-        if response.status_code != 200:
-            error_msg = f"Login failed with status: {response.status_code}"
+        if status_code != 200:
+            error_msg = f"Login failed with status: {status_code}"
             cp_log("ERROR", error_msg)
             raise Exception(error_msg)
             
         cp_log("DEBUG", "Decrypting login response")
-        response_data = response.json()
-        encryptedJsonResponse = response_data['result']['response']
+        encryptedJsonResponse = response_json['response']
         
         decryptedJsonData = decryptJsonData(decodedTapoKey, encryptedJsonResponse)
-        authToken = json.loads(decryptedJsonData)['result']['token']
+        authToken = json.loads(decryptedJsonData)['token']
         
         cp_log("INFO", f"loginRequest completed - Token length: {len(authToken)}")
         return authToken
@@ -291,16 +324,21 @@ def execRequest(deviceInfo, keys, data):
         
         cp_log("DEBUG", f"Sending request to {url}")
         response = session.post(url, json=secureData, cookies=cookies)
-        cp_log("DEBUG", f"Request response status: {response.status_code}")
         
-        if response.status_code != 200:
-            error_msg = f"Request failed with status: {response.status_code}"
+        # Extract data immediately
+        status_code = response.status_code
+        response_json = response.json()
+        response.close()
+        
+        cp_log("DEBUG", f"Request response status: {status_code}")
+        
+        if status_code != 200:
+            error_msg = f"Request failed with status: {status_code}"
             cp_log("ERROR", error_msg)
             raise Exception(error_msg)
 
         cp_log("DEBUG", "Decrypting response data")
-        response_data = response.json()
-        encryptedJsonResponse = response_data['result']['response']
+        encryptedJsonResponse = response_json['result']['response']
         
         decryptedJsonData = decryptJsonData(keys['decodedTapoKey'], encryptedJsonResponse)
         
@@ -325,20 +363,20 @@ def loadKeys(deviceInfo):
         tapoKeyPair = generateKeyPair()
         
         cp_log("DEBUG", "Generating handshake")
-        handshakeRequest = generateHandshake(deviceInfo["tapoIp"], tapoKeyPair["publicKey"])
+        handshake_result = generateHandshake(deviceInfo["tapoIp"], tapoKeyPair["publicKey"])
         
         cp_log("DEBUG", "Extracting Tapo key from handshake response")
-        handshake_data = handshakeRequest.json()
-        tapoKey = handshake_data['result']['key']
+        tapoKey = handshake_result['json']['key']
         
         cp_log("DEBUG", "Extracting cookie from handshake response")
         # Extract cookie from Set-Cookie header
-        set_cookie = handshakeRequest.headers.get("set-cookie", "")
+        set_cookie = handshake_result['headers'].get("set-cookie", "")
         if set_cookie:
             cookie_parts = set_cookie.split(';')[0].split('=', 1)
             tapoCookie = cookie_parts if len(cookie_parts) == 2 else ["", ""]
         else:
             tapoCookie = ["", ""]
+        cp_log("DEBUG", f"Extracted cookie: {tapoCookie[0]}={tapoCookie[1]}")
         
         cp_log("DEBUG", "Decoding Tapo key")
         decodedTapoKey = decodeTapoKey(tapoKey, tapoKeyPair)

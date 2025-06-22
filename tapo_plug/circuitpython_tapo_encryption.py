@@ -1,11 +1,13 @@
 # circuitpython_tapo_encryption.py
 # CircuitPython port of tapoEncryption.py
-# Uses: aesio, binascii, adafruit_hashlib, adafruit_rsa, pyasn1
+# Uses: aesio, binascii, adafruit_hashlib, adafruit_rsa
 
 import aesio
 import binascii
 import adafruit_hashlib as hashlib
-from adafruit_rsa import rsa, pkcs1
+import adafruit_rsa
+import adafruit_rsa.pem
+import adafruit_rsa.pkcs1
 import time
 import gc
 
@@ -66,23 +68,35 @@ def generateKeyPair():
     cp_log("DEBUG", "Starting RSA key generation (1024 bits)")
     
     try:
-        # Generate RSA key pair
+        # Generate RSA key pair using adafruit_rsa - correct usage from auth_protocol.py
         cp_log("DEBUG", "Generating RSA key pair...")
-        (public_key, private_key) = rsa.newkeys(1024)
+        gc.collect()  # Clean up memory before generating keys
+        (pub_key, priv_key) = adafruit_rsa.newkeys(1024)
         
         cp_log("DEBUG", "Converting keys to PEM format")
-        # Convert to PEM format strings
-        public_pem = public_key.save_pkcs1(format='PEM').decode('utf-8')
-        private_pem = private_key.save_pkcs1(format='PEM').decode('utf-8')
+        gc.collect()
+        
+        # Convert to PEM format using the correct adafruit_rsa methods
+        public_key_pem = adafruit_rsa.pem.save_pem(
+            pub_key.save_pkcs1(),
+            "PUBLIC KEY",
+        ).decode("UTF-8")
+        
+        private_key_pem = adafruit_rsa.pem.save_pem(
+            priv_key.save_pkcs1(),
+            "PRIVATE KEY",
+        ).decode("UTF-8")
+        
+        gc.collect()
         
         tapoKeyPair = {
-            "publicKey": public_pem,
-            "privateKey": private_pem,
-            "public_key_obj": public_key,
-            "private_key_obj": private_key
+            "publicKey": public_key_pem,
+            "privateKey": private_key_pem,
+            "public_key_obj": pub_key,
+            "private_key_obj": priv_key
         }
         
-        cp_log("INFO", f"generateKeyPair completed - Public: {len(public_pem)}, Private: {len(private_pem)}")
+        cp_log("INFO", f"generateKeyPair completed - Public: {len(public_key_pem)}, Private: {len(private_key_pem)}")
         gc.collect()  # Clean up memory
         return tapoKeyPair
         
@@ -105,8 +119,8 @@ def decodeTapoKey(tapoKey, tapoKeyPair):
         cp_log("DEBUG", "Decrypting with RSA private key")
         private_key = tapoKeyPair["private_key_obj"]
         
-        # Use adafruit_rsa for decryption
-        decryptedBytes = rsa.decrypt(encrypt_data, private_key)
+        # Use adafruit_rsa for decryption - correct usage from auth_protocol.py
+        decryptedBytes = adafruit_rsa.pkcs1.decrypt(encrypt_data, private_key)
         cp_log("DEBUG", f"Decrypted bytes length: {len(decryptedBytes)}")
 
         if len(decryptedBytes) >= 32:
